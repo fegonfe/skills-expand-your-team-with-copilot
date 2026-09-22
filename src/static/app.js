@@ -480,11 +480,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Activities without a difficulty are available to all levels.
   function matchesDifficulty(details) {
-    return currentDifficulty === "any"
-      ? true
-      : currentDifficulty === "all-levels"
-      ? !details.difficulty
-      : details.difficulty === currentDifficulty;
+    if (currentDifficulty === "any") {
+      return true;
+    }
+
+    if (currentDifficulty === "all-levels") {
+      return !details.difficulty;
+    }
+
+    return details.difficulty === currentDifficulty;
   }
 
   // Function to render a single activity card
@@ -513,9 +517,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const difficultyHtml = details.difficulty
-      ? `<p><strong>Difficulty:</strong> ${details.difficulty}</p>`
-      : "";
 
     // Create activity tag
     const tagHtml = `
@@ -545,7 +546,6 @@ document.addEventListener("DOMContentLoaded", () => {
         <strong>Schedule:</strong> ${formattedSchedule}
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
-      ${difficultyHtml}
       ${capacityIndicator}
       <div class="participants-list">
         <h5>Current Participants:</h5>
@@ -589,6 +589,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       </div>
     `;
+
+    if (details.difficulty) {
+      const difficulty = document.createElement("p");
+      const difficultyLabel = document.createElement("strong");
+      difficultyLabel.textContent = "Difficulty:";
+      difficulty.append(difficultyLabel, ` ${details.difficulty}`);
+      activityCard
+        .querySelector(".capacity-container")
+        .insertAdjacentElement("beforebegin", difficulty);
+    }
 
     // Add click handlers for delete buttons
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
