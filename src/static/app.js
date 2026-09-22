@@ -490,6 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
     activityCard.className = "activity-card";
+    activityCard.id = `activity-${encodeURIComponent(name)}`;
 
     // Calculate spots and capacity
     const totalSpots = details.max_participants;
@@ -512,7 +513,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const activityUrl = window.location.href;
+    const activityUrl = new URL(window.location.href);
+    activityUrl.hash = activityCard.id;
     const shareText = `Check out ${name} at Mergington High School! ${details.description}`;
     const escapedActivityName = escapeHtml(name);
     const facebookShareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
@@ -521,6 +523,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const xShareUrl = new URL("https://twitter.com/intent/tweet");
     xShareUrl.searchParams.set("text", shareText);
     xShareUrl.searchParams.set("url", activityUrl);
+    const escapedFacebookShareUrl = escapeHtml(facebookShareUrl.href);
+    const escapedXShareUrl = escapeHtml(xShareUrl.href);
 
     // Create activity tag
     const tagHtml = `
@@ -595,14 +599,14 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="share-label">Share:</span>
           <a
             class="share-button share-facebook"
-            href="${facebookShareUrl.href}"
+            href="${escapedFacebookShareUrl}"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Share ${escapedActivityName} on Facebook"
           >Facebook</a>
           <a
             class="share-button share-x"
-            href="${xShareUrl.href}"
+            href="${escapedXShareUrl}"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Share ${escapedActivityName} on X"
