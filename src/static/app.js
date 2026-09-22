@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("activity-search");
   const searchButton = document.getElementById("search-button");
   const categoryFilters = document.querySelectorAll(".category-filter");
+  const difficultyFilters = document.querySelectorAll(".difficulty-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
 
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // State for activities and filters
   let allActivities = {};
   let currentFilter = "all";
+  let currentDifficulty = "any";
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
@@ -64,6 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeTimeFilter) {
       currentTimeRange = activeTimeFilter.dataset.time;
     }
+  }
+
+  if (currentDifficulty !== "any") {
+    queryParams.push(
+      `difficulty=${encodeURIComponent(currentDifficulty)}`
+    );
   }
 
   // Function to set day filter
@@ -414,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Clear the activities list
     activitiesList.innerHTML = "";
 
-    // Apply client-side filtering - this handles category filter and search, plus weekend filter
+    // Apply client-side filtering - this handles category, difficulty, search, and weekend filters
     let filteredActivities = {};
 
     Object.entries(allActivities).forEach(([name, details]) => {
@@ -571,6 +579,16 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    if (details.difficulty) {
+      const difficulty = document.createElement("p");
+      const difficultyLabel = document.createElement("strong");
+      difficultyLabel.textContent = "Difficulty:";
+      difficulty.append(difficultyLabel, ` ${details.difficulty}`);
+      activityCard
+        .querySelector(".capacity-container")
+        .insertAdjacentElement("beforebegin", difficulty);
+    }
+
     // Add click handlers for delete buttons
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
     deleteButtons.forEach((button) => {
@@ -612,6 +630,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update current filter and display filtered activities
       currentFilter = button.dataset.category;
       displayFilteredActivities();
+    });
+  });
+
+  difficultyFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+      difficultyFilters.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      currentDifficulty = button.dataset.difficulty;
+      fetchActivities();
     });
   });
 
