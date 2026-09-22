@@ -498,6 +498,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const activityUrl = window.location.href;
+    const shareText = `Check out ${name} at Mergington High School! ${details.description}`;
+    const facebookShareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
+    facebookShareUrl.searchParams.set("u", activityUrl);
+    facebookShareUrl.searchParams.set("quote", shareText);
+    const xShareUrl = new URL("https://twitter.com/intent/tweet");
+    xShareUrl.searchParams.set("text", shareText);
+    xShareUrl.searchParams.set("url", activityUrl);
 
     // Create activity tag
     const tagHtml = `
@@ -568,6 +576,23 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+        <div class="share-actions" aria-label="Share ${name}">
+          <span class="share-label">Share:</span>
+          <a
+            class="share-button share-facebook"
+            href="${facebookShareUrl.href}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share ${name} on Facebook"
+          >Facebook</a>
+          <a
+            class="share-button share-x"
+            href="${xShareUrl.href}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share ${name} on X"
+          >X</a>
+        </div>
       </div>
     `;
 
