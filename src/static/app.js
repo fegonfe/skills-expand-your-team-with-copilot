@@ -487,10 +487,25 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  function getActivityId(name) {
+    const slug =
+      String(name)
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "activity";
+    const hash = Array.from(String(name)).reduce(
+      (value, character) => ((value * 31 + character.charCodeAt(0)) >>> 0),
+      0
+    );
+
+    return `activity-${slug}-${hash.toString(36)}`;
+  }
+
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
     activityCard.className = "activity-card";
-    activityCard.id = `activity-${encodeURIComponent(name)}`;
+    activityCard.id = getActivityId(name);
 
     // Calculate spots and capacity
     const totalSpots = details.max_participants;
@@ -514,15 +529,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
     const activityUrl = new URL(window.location.href);
+    activityUrl.search = "";
     activityUrl.hash = activityCard.id;
     const shareText = `Check out ${name} at Mergington High School! ${details.description}`;
     const escapedActivityName = escapeHtml(name);
     const facebookShareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
-    facebookShareUrl.searchParams.set("u", activityUrl);
+    facebookShareUrl.searchParams.set("u", activityUrl.href);
     facebookShareUrl.searchParams.set("quote", shareText);
     const xShareUrl = new URL("https://twitter.com/intent/tweet");
     xShareUrl.searchParams.set("text", shareText);
-    xShareUrl.searchParams.set("url", activityUrl);
+    xShareUrl.searchParams.set("url", activityUrl.href);
     const escapedFacebookShareUrl = escapeHtml(facebookShareUrl.href);
     const escapedXShareUrl = escapeHtml(xShareUrl.href);
 
