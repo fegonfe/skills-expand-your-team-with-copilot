@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("activity-search");
   const searchButton = document.getElementById("search-button");
   const categoryFilters = document.querySelectorAll(".category-filter");
+  const difficultyFilters = document.querySelectorAll(".difficulty-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
 
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // State for activities and filters
   let allActivities = {};
   let currentFilter = "all";
+  let currentDifficulty = "all";
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
@@ -414,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Clear the activities list
     activitiesList.innerHTML = "";
 
-    // Apply client-side filtering - this handles category filter and search, plus weekend filter
+    // Apply client-side filtering - this handles category, difficulty, search, and weekend filters
     let filteredActivities = {};
 
     Object.entries(allActivities).forEach(([name, details]) => {
@@ -422,6 +424,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Apply category filter
       if (currentFilter !== "all" && activityType !== currentFilter) {
+        return;
+      }
+
+      // Activities without a difficulty are available to all levels
+      if (
+        (currentDifficulty === "all" && details.difficulty) ||
+        (currentDifficulty !== "all" &&
+          details.difficulty !== currentDifficulty)
+      ) {
         return;
       }
 
@@ -498,6 +509,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const difficultyHtml = details.difficulty
+      ? `<p><strong>Difficulty:</strong> ${details.difficulty}</p>`
+      : "";
 
     // Create activity tag
     const tagHtml = `
@@ -527,6 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <strong>Schedule:</strong> ${formattedSchedule}
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
+      ${difficultyHtml}
       ${capacityIndicator}
       <div class="participants-list">
         <h5>Current Participants:</h5>
@@ -611,6 +626,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Update current filter and display filtered activities
       currentFilter = button.dataset.category;
+      displayFilteredActivities();
+    });
+  });
+
+  difficultyFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+      difficultyFilters.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      currentDifficulty = button.dataset.difficulty;
       displayFilteredActivities();
     });
   });
