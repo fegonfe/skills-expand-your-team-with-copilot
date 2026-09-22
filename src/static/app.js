@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeIcon = document.getElementById("theme-icon");
+  const themeLabel = document.getElementById("theme-label");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -43,6 +46,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+
+  function setTheme(theme) {
+    const isDark = theme === "dark";
+    document.documentElement.dataset.theme = theme;
+    themeToggle.setAttribute("aria-pressed", isDark);
+    themeToggle.setAttribute(
+      "aria-label",
+      `Switch to ${isDark ? "light" : "dark"} mode`
+    );
+    themeIcon.textContent = isDark ? "☀️" : "🌙";
+    themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
+    localStorage.setItem("theme", theme);
+  }
+
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem("theme");
+    const theme =
+      savedTheme ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light");
+    setTheme(theme);
+  }
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -862,6 +888,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Initialize app
+  initializeTheme();
+  themeToggle.addEventListener("click", () => {
+    setTheme(
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark"
+    );
+  });
   checkAuthentication();
   initializeFilters();
   fetchActivities();
