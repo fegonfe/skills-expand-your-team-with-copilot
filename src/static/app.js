@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function setTheme(theme) {
     const isDark = theme === "dark";
     document.documentElement.dataset.theme = theme;
-    themeToggle.setAttribute("aria-pressed", isDark);
+    themeToggle.setAttribute("aria-pressed", String(isDark));
     themeToggle.setAttribute(
       "aria-label",
       `Switch to ${isDark ? "light" : "dark"} mode`
@@ -62,11 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initializeTheme() {
     const savedTheme = localStorage.getItem("theme");
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
     const theme =
-      savedTheme ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light");
+      savedTheme === "dark" || savedTheme === "light" ? savedTheme : systemTheme;
     setTheme(theme);
   }
 

@@ -73,7 +73,10 @@ body {
   font-size: 0.9rem;
 }
 
-input {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"] {
   background-color: var(--surface);
   color: var(--text-primary);
   border-color: var(--border);
