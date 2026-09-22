@@ -6,26 +6,7 @@
     <title>Mergington High School Activities</title>
     <script>
       (() => {
-        window.updateThemeToggle = () => {
-          const themeToggle = document.getElementById("theme-toggle");
-          if (!themeToggle) {
-            return;
-          }
-
-          const isDark = document.documentElement.dataset.theme === "dark";
-          themeToggle.setAttribute("aria-pressed", String(isDark));
-          themeToggle.setAttribute(
-            "aria-label",
-            `Switch to ${isDark ? "light" : "dark"} mode`
-          );
-          document.getElementById("theme-icon").textContent = isDark
-            ? "☀️"
-            : "🌙";
-          document.getElementById("theme-label").textContent = isDark
-            ? "Light mode"
-            : "Dark mode";
-        };
-
+        // Apply the saved theme before styles load to avoid a flash of light mode.
         const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
           .matches
           ? "dark"
@@ -52,15 +33,11 @@
         <button
           id="theme-toggle"
           class="icon-button"
-          aria-label="Switch to dark mode"
           aria-pressed="false"
         >
           <span id="theme-icon" aria-hidden="true">🌙</span>
           <span id="theme-label">Dark mode</span>
         </button>
-        <script>
-          window.updateThemeToggle();
-        </script>
         <div id="user-status">
           <button id="login-button" class="icon-button">
             <span class="user-icon">👤</span>

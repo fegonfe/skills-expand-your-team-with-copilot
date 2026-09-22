@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
   const themeToggle = document.getElementById("theme-toggle");
+  const themeIcon = document.getElementById("theme-icon");
+  const themeLabel = document.getElementById("theme-label");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -52,8 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function setTheme(theme, persist = false) {
     const normalizedTheme = theme === "dark" ? "dark" : "light";
+    const isDark = normalizedTheme === "dark";
     document.documentElement.dataset.theme = normalizedTheme;
-    window.updateThemeToggle();
+    if (!themeToggle || !themeIcon || !themeLabel) {
+      return;
+    }
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+    themeIcon.textContent = isDark ? "☀️" : "🌙";
+    themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
     if (persist) {
       try {
         localStorage.setItem("theme", normalizedTheme);
@@ -886,12 +894,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   initializeTheme();
-  themeToggle.addEventListener("click", () => {
-    setTheme(
-      document.documentElement.dataset.theme === "dark" ? "light" : "dark",
-      true
-    );
-  });
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      setTheme(
+        document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+        true
+      );
+    });
+  }
   checkAuthentication();
   initializeFilters();
   fetchActivities();
