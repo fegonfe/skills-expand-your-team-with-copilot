@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
   const themeToggle = document.getElementById("theme-toggle");
-  const themeIcon = document.getElementById("theme-icon");
-  const themeLabel = document.getElementById("theme-label");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -47,17 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Authentication state
   let currentUser = null;
 
+  /**
+   * Applies a valid theme and optionally saves an explicit user selection.
+   * @param {string} theme Theme to apply; values other than "dark" use light mode.
+   * @param {boolean} persist Whether to save the theme selection.
+   */
   function setTheme(theme, persist = false) {
     const normalizedTheme = theme === "dark" ? "dark" : "light";
-    const isDark = normalizedTheme === "dark";
     document.documentElement.dataset.theme = normalizedTheme;
-    themeToggle.setAttribute("aria-pressed", String(isDark));
-    themeToggle.setAttribute(
-      "aria-label",
-      `Switch to ${isDark ? "light" : "dark"} mode`
-    );
-    themeIcon.textContent = isDark ? "☀️" : "🌙";
-    themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
+    window.updateThemeToggle();
     if (persist) {
       try {
         localStorage.setItem("theme", normalizedTheme);
