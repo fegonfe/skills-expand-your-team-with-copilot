@@ -487,6 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // Include a hash suffix so activities with similar names retain unique fragments.
   function getActivityId(name) {
     const slug =
       String(name)
