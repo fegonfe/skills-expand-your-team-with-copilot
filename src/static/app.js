@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // State for activities and filters
   let allActivities = {};
   let currentFilter = "all";
-  let currentDifficulty = "all";
+  let currentDifficulty = "all-levels";
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
@@ -427,12 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Activities without a difficulty are available to all levels
-      if (
-        (currentDifficulty === "all" && details.difficulty) ||
-        (currentDifficulty !== "all" &&
-          details.difficulty !== currentDifficulty)
-      ) {
+      if (!matchesDifficulty(details)) {
         return;
       }
 
@@ -481,6 +476,13 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.entries(filteredActivities).forEach(([name, details]) => {
       renderActivityCard(name, details);
     });
+  }
+
+  // Activities without a difficulty are available to all levels.
+  function matchesDifficulty(details) {
+    return currentDifficulty === "all-levels"
+      ? !details.difficulty
+      : details.difficulty === currentDifficulty;
   }
 
   // Function to render a single activity card
