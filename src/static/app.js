@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Authentication state
   let currentUser = null;
 
-  function setTheme(theme) {
+  function setTheme(theme, persist = false) {
     const isDark = theme === "dark";
     document.documentElement.dataset.theme = theme;
     themeToggle.setAttribute("aria-pressed", String(isDark));
@@ -57,18 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     themeIcon.textContent = isDark ? "☀️" : "🌙";
     themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
-    localStorage.setItem("theme", theme);
+    if (persist) {
+      try {
+        localStorage.setItem("theme", theme);
+      } catch {
+        // Keep the active theme when persistent storage is unavailable.
+      }
+    }
   }
 
   function initializeTheme() {
-    const savedTheme = localStorage.getItem("theme");
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-      .matches
-      ? "dark"
-      : "light";
-    const theme =
-      savedTheme === "dark" || savedTheme === "light" ? savedTheme : systemTheme;
-    setTheme(theme);
+    setTheme(document.documentElement.dataset.theme);
   }
 
   // Time range mappings for the dropdown
@@ -892,7 +891,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeTheme();
   themeToggle.addEventListener("click", () => {
     setTheme(
-      document.documentElement.dataset.theme === "dark" ? "light" : "dark"
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+      true
     );
   });
   checkAuthentication();

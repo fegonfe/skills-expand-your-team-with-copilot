@@ -6,11 +6,16 @@
     <title>Mergington High School Activities</title>
     <script>
       (() => {
-        const savedTheme = localStorage.getItem("theme");
         const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
           .matches
           ? "dark"
           : "light";
+        let savedTheme;
+        try {
+          savedTheme = localStorage.getItem("theme");
+        } catch (error) {
+          savedTheme = null;
+        }
         document.documentElement.dataset.theme =
           savedTheme === "dark" || savedTheme === "light"
             ? savedTheme

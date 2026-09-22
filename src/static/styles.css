@@ -73,10 +73,17 @@ body {
   font-size: 0.9rem;
 }
 
+input:not([type]),
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="search"] {
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+textarea,
+select {
   background-color: var(--surface);
   color: var(--text-primary);
   border-color: var(--border);
