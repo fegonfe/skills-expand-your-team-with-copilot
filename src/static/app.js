@@ -68,6 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  if (currentDifficulty !== "any") {
+    queryParams.push(
+      `difficulty=${encodeURIComponent(currentDifficulty)}`
+    );
+  }
+
   // Function to set day filter
   function setDayFilter(day) {
     currentDay = day;
@@ -427,10 +433,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (!matchesDifficulty(details)) {
-        return;
-      }
-
       // Apply weekend filter if selected
       if (currentTimeRange === "weekend" && details.schedule_details) {
         const activityDays = details.schedule_details.days;
@@ -476,19 +478,6 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.entries(filteredActivities).forEach(([name, details]) => {
       renderActivityCard(name, details);
     });
-  }
-
-  // Activities without a difficulty are available to all levels.
-  function matchesDifficulty(details) {
-    if (currentDifficulty === "any") {
-      return true;
-    }
-
-    if (currentDifficulty === "all-levels") {
-      return !details.difficulty;
-    }
-
-    return details.difficulty === currentDifficulty;
   }
 
   // Function to render a single activity card
@@ -650,7 +639,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("active");
 
       currentDifficulty = button.dataset.difficulty;
-      displayFilteredActivities();
+      fetchActivities();
     });
   });
 
