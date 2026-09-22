@@ -487,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Include a hash suffix so activities with similar names retain unique fragments.
+  // Append a Java-style non-cryptographic hash to distinguish similar activity names.
   function getActivityId(name) {
     const slug =
       String(name)
@@ -536,8 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const escapedActivityName = escapeHtml(name);
     const facebookShareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
     facebookShareUrl.searchParams.set("u", activityUrl.href);
-    facebookShareUrl.searchParams.set("quote", shareText);
-    const xShareUrl = new URL("https://twitter.com/intent/tweet");
+    const xShareUrl = new URL("https://x.com/intent/tweet");
     xShareUrl.searchParams.set("text", shareText);
     xShareUrl.searchParams.set("url", activityUrl.href);
     const escapedFacebookShareUrl = escapeHtml(facebookShareUrl.href);
