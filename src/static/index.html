@@ -38,6 +38,23 @@
           <span id="theme-icon" aria-hidden="true">🌙</span>
           <span id="theme-label">Dark mode</span>
         </button>
+        <script>
+          (() => {
+            const themeToggle = document.getElementById("theme-toggle");
+            const isDark = document.documentElement.dataset.theme === "dark";
+            themeToggle.setAttribute("aria-pressed", String(isDark));
+            themeToggle.setAttribute(
+              "aria-label",
+              `Switch to ${isDark ? "light" : "dark"} mode`
+            );
+            document.getElementById("theme-icon").textContent = isDark
+              ? "☀️"
+              : "🌙";
+            document.getElementById("theme-label").textContent = isDark
+              ? "Light mode"
+              : "Dark mode";
+          })();
+        </script>
         <div id="user-status">
           <button id="login-button" class="icon-button">
             <span class="user-icon">👤</span>

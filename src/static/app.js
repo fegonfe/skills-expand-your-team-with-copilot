@@ -48,8 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentUser = null;
 
   function setTheme(theme, persist = false) {
-    const isDark = theme === "dark";
-    document.documentElement.dataset.theme = theme;
+    const normalizedTheme = theme === "dark" ? "dark" : "light";
+    const isDark = normalizedTheme === "dark";
+    document.documentElement.dataset.theme = normalizedTheme;
     themeToggle.setAttribute("aria-pressed", String(isDark));
     themeToggle.setAttribute(
       "aria-label",
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
     if (persist) {
       try {
-        localStorage.setItem("theme", theme);
+        localStorage.setItem("theme", normalizedTheme);
       } catch {
         // Keep the active theme when persistent storage is unavailable.
       }
