@@ -473,6 +473,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Function to render a single activity card
+  function escapeHtml(value) {
+    return String(value).replace(
+      /[&<>"']/g,
+      (character) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[character]
+    );
+  }
+
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
     activityCard.className = "activity-card";
@@ -500,6 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formattedSchedule = formatSchedule(details);
     const activityUrl = window.location.href;
     const shareText = `Check out ${name} at Mergington High School! ${details.description}`;
+    const escapedActivityName = escapeHtml(name);
     const facebookShareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
     facebookShareUrl.searchParams.set("u", activityUrl);
     facebookShareUrl.searchParams.set("quote", shareText);
@@ -576,21 +591,21 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
-        <div class="share-actions" aria-label="Share ${name}">
+        <div class="share-actions" role="group" aria-label="Share ${escapedActivityName}">
           <span class="share-label">Share:</span>
           <a
             class="share-button share-facebook"
             href="${facebookShareUrl.href}"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share ${name} on Facebook"
+            aria-label="Share ${escapedActivityName} on Facebook"
           >Facebook</a>
           <a
             class="share-button share-x"
             href="${xShareUrl.href}"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share ${name} on X"
+            aria-label="Share ${escapedActivityName} on X"
           >X</a>
         </div>
       </div>
