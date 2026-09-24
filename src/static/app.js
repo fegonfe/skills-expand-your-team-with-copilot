@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeIcon = document.getElementById("theme-icon");
+  const themeLabel = document.getElementById("theme-label");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -45,6 +48,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+
+  /**
+   * Applies a valid theme and optionally saves an explicit user selection.
+   * @param {string} theme Theme to apply; values other than "dark" use light mode.
+   * @param {boolean} persist Whether to save the theme selection.
+   */
+  function setTheme(theme, persist = false) {
+    const normalizedTheme = theme === "dark" ? "dark" : "light";
+    const isDark = normalizedTheme === "dark";
+    document.documentElement.dataset.theme = normalizedTheme;
+    if (!themeToggle || !themeIcon || !themeLabel) {
+      return;
+    }
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+    themeIcon.textContent = isDark ? "☀️" : "🌙";
+    themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
+    if (persist) {
+      try {
+        localStorage.setItem("theme", normalizedTheme);
+      } catch {
+        // Keep the active theme when persistent storage is unavailable.
+      }
+    }
+  }
+
+  function initializeTheme() {
+    setTheme(document.documentElement.dataset.theme);
+  }
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -890,6 +921,15 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Initialize app
+  initializeTheme();
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      setTheme(
+        document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+        true
+      );
+    });
+  }
   checkAuthentication();
   initializeFilters();
   fetchActivities();

@@ -32,6 +32,29 @@
   --info-light: #d1ecf1;
 }
 
+[data-theme="dark"] {
+  --primary: #9fa8da;
+  --primary-light: #c5cae9;
+  --primary-dark: #5c6bc0;
+  --primary-text: #121212;
+  --secondary: #ffb74d;
+  --secondary-light: #ffd180;
+  --secondary-dark: #f57c00;
+  --secondary-text: #121212;
+  --background: #121212;
+  --surface: #1e1e1e;
+  --text-primary: #f5f5f5;
+  --text-secondary: #c7c7c7;
+  --border: #424242;
+  --border-light: #333333;
+  --border-focus: #757575;
+  --success-light: #1b3a20;
+  --warning-light: #4a3700;
+  --error-light: #4a1c1c;
+  --info: #80deea;
+  --info-light: #123840;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -48,6 +71,22 @@ body {
   padding: 12px;
   background-color: var(--background);
   font-size: 0.9rem;
+}
+
+input:not([type]),
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+textarea,
+select {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--border);
 }
 
 header {
@@ -487,6 +526,8 @@ footer {
   flex: 1;
   min-width: 0; /* Add this to prevent input from overflowing */
   padding: 6px 10px;
+  background-color: var(--surface);
+  color: var(--text-primary);
   border: 1px solid var(--border);
   border-right: none;
   border-radius: 20px 0 0 20px;
@@ -621,6 +662,9 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #user-status {
